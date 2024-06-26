@@ -1,4 +1,4 @@
-# Quien_quiere_C_Millonario
+# Quien quiere C Millonario
 
 ## CURL Instalar:
 - Agregar la ubicación de CURL/bin al path.
