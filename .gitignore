@@ -1,0 +1,4 @@
+
+*.depend
+/App/bin
+/App/obj
