@@ -6,6 +6,9 @@
     #include <stdio.h>
     #include <stdlib.h>
 
-    int menu(void);
+    #define ARCHIVO_CONFIG  "../../config.txt"
+    #define ARCHIVO_INFORME "../../Resultados/"
+
+    void gui(void);
     
 #endif
