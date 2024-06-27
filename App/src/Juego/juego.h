@@ -6,7 +6,7 @@
     #include <stdio.h>
     #include <stdlib.h>
 
-    #define ARCHIVO_CONFIG  "../../config.txt"
+    #define ARCHIVO_CONFIG  "config.txt"
     #define ARCHIVO_INFORME "../../Resultados/"
 
     void gui(void);

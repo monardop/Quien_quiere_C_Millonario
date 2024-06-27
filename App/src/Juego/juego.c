@@ -3,13 +3,19 @@
 int menu(void)
 {
     char seleccion;
+    int correcto;
+
     do
     {
+        correcto = 0;
         system("cls");
         printf("[A] Jugar\n[B] Salir\n");
         seleccion = fgetc(stdin);
-        seleccion = toLower(seleccion);
-    }while(seleccion != 'A' || seleccion != 'B');
+        fflush(stdin);
+        seleccion = toUpper(seleccion);
+        if(seleccion == 'A' || seleccion == 'B')
+            correcto = 1;
+    }while(!correcto);
 
     return (seleccion == 'A')? 1 : 0;
 }
@@ -18,12 +24,20 @@ int cantidadJugadores(void)
 {
     int cantidad;
     char aux[10];
+    short error = 0;
     do
     {
         system("cls");
+        if(error)
+            printf("Por favor ingrese un numero.\n");
+        error = 0;
         printf("Ingrese la cantidad de jugadores: ");
         fgets(aux, 10, stdin);
-    }while(esNumero(aux) == 0);
+        fflush(stdin);
+        limpiarCadena(aux);
+        if(esNumero(aux) == 0 || strLength(aux) == 0)
+            error = 1;
+    }while(error);
 
     cantidad = atoi(aux);
 
@@ -64,6 +78,8 @@ void gui(void)
         // muestro rounds y tiempo [Puede tener error]
 
         cantJugadores = cantidadJugadores();
+        printf("Se seleccionaron %d jugadores\n", cantJugadores);
+        system("pause");
         // cargo los jugadores en lista de jugadores [Puede tener error]
 
 
