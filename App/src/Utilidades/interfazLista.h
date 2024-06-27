@@ -18,10 +18,9 @@
     void vaciarLista(dsLista *lista);
     int  listaVacia(dsLista *lista);
     int  agregarElemento(dsLista *lista, void *data, unsigned dataSize);
-    int  agregarPosicionN(dsLista *lista, void *data, unsigned dataSize, int pos);
 
     // Funciones particulares para la app
-    int  algoritmoFisherYates(dsLista *lista, unsigned ce);
+    void algoritmoFisherYates(dsLista *lista, unsigned ce);
     void listMap(dsLista *lista, lambda func);
     void listFilter(dsLista *lista, cmp cmp);
     void listReduce(dsLista *lista, void* container); 
