@@ -1,4 +1,8 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "juego.h"
+#include "../Utilidades/utilidades.h"
 
 int menu(void)
 {
