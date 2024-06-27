@@ -1,7 +1,7 @@
 #include "utilidades.h"
 #include <stdio.h>
 
-int toLower(const char c)
+int toUpper(const char c)
 {
     if(c >= 'a' && c <= 'z')
     {
@@ -11,14 +11,29 @@ int toLower(const char c)
     return c;
 }
 
-int esNumero(const char *cad)
+int esNumero(char *cad)
 {
     while(*cad)
     {
-        if(*cad <= '0' || *cad >= '9') 
+
+        if(*cad < '0' || *cad > '9')
             return 0;
+        cad++;
     }
     return 1;
+}
+
+void limpiarCadena(char *cad)
+{
+    while(*cad && *cad != '\n') cad++;
+    *cad = '\0';
+}
+
+int strLength(const char *cad)
+{
+    const char *aux = cad;
+    while(*aux++);
+    return aux - cad - 1;
 }
 
 void manejoErrores(const int error)
