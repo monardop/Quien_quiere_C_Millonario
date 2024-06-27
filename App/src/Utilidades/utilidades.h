@@ -31,6 +31,6 @@
     int  esNumero(char *cad);
     void manejoErrores(const int error);
     void limpiarCadena(char *cad);
-    int strLength(const char *cad);
+    int  strLength(const char *cad);
 
 #endif
