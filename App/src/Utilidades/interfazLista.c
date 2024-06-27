@@ -73,6 +73,7 @@ void intercambio(dsLista *lista, int origen, int destino)
     {
         lista = &(*lista)->next;
         origen--;
+        destino--;
     }
     auxiliar = *lista;
     while(destino > 0)
