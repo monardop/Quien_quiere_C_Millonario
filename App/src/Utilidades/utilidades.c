@@ -1,5 +1,4 @@
 #include "utilidades.h"
-#include <stdio.h>
 
 int toUpper(const char c)
 {

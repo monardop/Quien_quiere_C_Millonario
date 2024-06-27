@@ -1,6 +1,11 @@
 #ifndef UTILIDADES_H
 #define UTILIDADES_H
 
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <string.h>
+    #include <time.h>
+
     #define ERROR_ARCHIVO_CONFIG    -5
     #define ERROR_MEMORIA           -4
     #define ERROR_API               -3
