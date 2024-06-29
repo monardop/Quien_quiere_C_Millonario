@@ -6,10 +6,10 @@
     #include <string.h>
     #include <time.h>
 
-    #define ERROR_ARCHIVO_CONFIG    -5
-    #define ERROR_MEMORIA           -4
-    #define ERROR_API               -3
-    #define ERROR_ARCHIVO_RESULTADO -2
+    #define FALLA_ARCHIVO_CONFIG    -5
+    #define FALLA_MEMORIA           -4
+    #define FALLA_CURL              -3
+    #define FALLA_ARCHIVO_RESULTADO -2
     #define OK                       1
 
     typedef struct

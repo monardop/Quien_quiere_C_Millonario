@@ -52,13 +52,13 @@ int configurarPartida(int *rounds, int *tiempo)
     FILE *archivoConfig = fopen(ARCHIVO_CONFIG, "r");
 
     if(!archivoConfig)
-        return ERROR_ARCHIVO_CONFIG;
+        return FALLA_ARCHIVO_CONFIG;
 
     if (!fscanf(archivoConfig, "Rounds: %d\nTiempo: %d", rounds, tiempo))
     {
         perror("El archivo no tiene la configuracion adecuada.\n");
         fclose(archivoConfig);
-        return ERROR_ARCHIVO_CONFIG;
+        return FALLA_ARCHIVO_CONFIG;
     }
 
     fclose(archivoConfig);

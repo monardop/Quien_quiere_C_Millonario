@@ -19,9 +19,9 @@ int getJugadores(dsLista *pl, const int cantJugadores, const int rounds)
             nuevo.respuestas = (char *)malloc(rounds);
             nuevo.tiempoDeRespuesta = (int *)malloc(rounds * sizeof(int));
             if(nuevo.respuestas == NULL || nuevo.tiempoDeRespuesta == NULL)
-                return ERROR_MEMORIA;
+                return FALLA_MEMORIA;
             if(agregarElemento(pl, &nuevo, sizeof(tJugador)) != OK)
-                return ERROR_MEMORIA;
+                return FALLA_MEMORIA;
         } 
     }   
 
