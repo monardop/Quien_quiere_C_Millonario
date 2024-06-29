@@ -37,16 +37,16 @@ void manejoErrores(const int error)
 {
     switch (error)
     {
-        case ERROR_ARCHIVO_CONFIG:
+        case FALLA_ARCHIVO_CONFIG:
             printf("Hubo un error en la lectura de la configuracion.\n");
             break;
-        case ERROR_MEMORIA:
-            printf("Hubo un error en la ejecucion por falta de memoria.\n");
+        case FALLA_MEMORIA:
+            printf("Hubo un falla en la ejecucion por falta de memoria.\n");
             break;
-        case ERROR_API:
-            printf("Error en la obtncion de preguntas.\n");
+        case FALLA_CURL:
+            printf("Hubo un error con cURL.\n");
             break;
-        case ERROR_ARCHIVO_RESULTADO:
+        case FALLA_ARCHIVO_RESULTADO:
             printf("Hubo un problema al crear el informe de resultados.\n");
             break;
     }

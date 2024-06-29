@@ -45,7 +45,7 @@ int agregarElemento(dsLista *lista, void *data, unsigned dataSize)
        (nuevo->data = malloc(dataSize))       == NULL  )
     {
         free(nuevo);
-        return ERROR_MEMORIA;
+        return FALLA_MEMORIA;
     }
     memcpy(nuevo->data, data, dataSize);
     nuevo->dataSize = dataSize;
