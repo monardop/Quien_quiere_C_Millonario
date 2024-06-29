@@ -23,7 +23,6 @@
     void algoritmoFisherYates(dsLista *lista, unsigned ce);
     void listMap(dsLista *lista, lambda func);
     void listFilter(dsLista *lista, cmp cmp);
-    void listReduce(dsLista *lista, void* container); 
-    void imprimirLista(dsLista *lista, lambda print);
+    void listReduce(dsLista *lista, void* container, reduceFunc func); 
 
 #endif
