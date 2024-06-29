@@ -27,14 +27,12 @@ void limpiarCadena(char *cad)
     while(*cad && *cad != '\n') cad++;
     *cad = '\0';
 }
-
-int strLength(const char *cad)
-{
-    const char *aux = cad;
-    while(*aux++);
-    return aux - cad - 1;
-}
-
+/******************************************************************************
+* @Descripción:
+* Función para gestionar los errores que puede escalar con base a las 
+* necesidades que vaya teniendo. Cada uno de los errores posibles será una 
+* macro para ser más específico en el mensaje de salida.
+******************************************************************************/
 void manejoErrores(const int error)
 {
     switch (error)

@@ -14,15 +14,21 @@ int listaVacia(dsLista *lista)
 
 void vaciarLista(dsLista *lista)
 {
-    tNodo *delNodo;
+    tNodo *aux = *lista, 
+          *elim;
 
-    while(*lista)
-    {
-        delNodo = *lista;
-        *lista = delNodo->next;
-        free(delNodo->data);
-        free(delNodo);
-    }
+    if(!aux)
+        return;
+    
+    aux = (*lista)->next;
+    do{
+        elim = aux;
+        aux  = aux->next;
+        free(elim->data);
+        free(elim);
+    }while(aux != (*lista));
+
+    *lista = NULL;
 }
 
 /******************************************************************************
@@ -73,6 +79,7 @@ void intercambio(dsLista *lista, int origen, int destino)
     {
         lista = &(*lista)->next;
         origen--;
+        destino--;
     }
     auxiliar = *lista;
     while(destino > 0)
@@ -97,14 +104,42 @@ void algoritmoFisherYates(dsLista *lista, unsigned ce)
     for(origen = ce - 1; origen > 1; origen--)
     {
         destino = rand() % origen;
-        intercambio(lista, origen, destino);
+        if(destino > origen)
+            intercambio(lista, origen, destino);
+        else if(origen > destino)
+            intercambio(lista, destino, origen);
     }
 }
 
-void listMap(dsLista *lista, lambda func);
-
 void listFilter(dsLista *lista, cmp cmp);
 
-void listReduce(dsLista *lista, void* container); 
+void listReduce(dsLista *lista, void* container, reduceFunc func)
+{
+    tNodo* aux;
+    if(!(*lista))
+    {
+        return;
+    }
+    aux = (*lista)->next;
+    do
+    {
+        func(aux->data, container);
+        aux = aux->next;
+    }while(aux != (*lista)->next);
+} 
 
-void imprimirLista(dsLista *lista, lambda print);
+void listMap(dsLista *lista, lambda func)
+{
+    tNodo* aux;
+    if(!(*lista))
+    {
+        return;
+    }
+    aux = (*lista)->next;
+    do
+    {
+        func(aux->data);
+        aux = aux->next;
+    }while(aux != (*lista)->next);
+
+}

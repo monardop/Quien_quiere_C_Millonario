@@ -1,5 +1,7 @@
 #include "juego.h"
 #include "../Utilidades/utilidades.h"
+#include "../Utilidades/interfazLista.h"
+#include "../Jugadores/jugadores.h"
 
 int menu(void)
 {
@@ -36,7 +38,7 @@ int cantidadJugadores(void)
         fgets(aux, 10, stdin);
         fflush(stdin);
         limpiarCadena(aux);
-        if(esNumero(aux) == 0 || strLength(aux) == 0)
+        if(esNumero(aux) == 0 || strlen(aux) == 0)
             error = 1;
     }while(error);
 
@@ -66,26 +68,38 @@ int configurarPartida(int *rounds, int *tiempo)
 void gui(void)
 {
     int cantJugadores, error, tiempoRound, rounds;
+    dsLista jugadores, preguntas;
+
+    nuevaLista(&jugadores);
+    nuevaLista(&preguntas);
 
     if((error = configurarPartida(&rounds, &tiempoRound)) != OK)
     {
         manejoErrores(error);
         return;
     }
-
+    
     while (menu()) // 1 si quiere jugar, de lo contrario no se ejecuta.
     {
         // obtengo preguntas en api
         // muestro rounds y tiempo [Puede tener error]
 
         cantJugadores = cantidadJugadores();
-        printf("Se seleccionaron %d jugadores\n", cantJugadores);
+        printf("La configuracion establece %d rounds de %d segundos\n", 
+                rounds, tiempoRound);
+        if((error = getJugadores(&jugadores, cantJugadores, rounds)) != OK)
+        {
+            manejoErrores(error);
+            vaciarListaJugadores(&jugadores, cantJugadores);
+            return;
+        }
+        system("cls");
+        mostrarJugadores(&jugadores);
         system("pause");
-        // cargo los jugadores en lista de jugadores [Puede tener error]
 
-
-
+        //generarInforme
+        vaciarListaJugadores(&jugadores, cantJugadores);
+        //vaciarListaPreguntas
     }
-
-    //limpiar la lista de Jugadores y preguntas.
 }
+//TODO: errorEnPartida: función que imprima el error y limpie las listas.
