@@ -59,3 +59,45 @@ int obtenerPreguntas(dsLista *preguntas)
     free(respuesta.string);
     return OK;
 }
+
+int filtrarPreguntas(const void *parametro, const void *pregunta)
+{
+    int *dificultad = (int *)parametro;
+    tPregunta *dificultadPregunta = (tPregunta *)pregunta;
+
+    return *dificultad == dificultadPregunta->nivel;
+}
+
+int preguntasPartida(dsLista *preguntas, dsLista *partidaActual, int rounds, int dificultad)
+{
+    if(listFilter(partidaActual, preguntas, (void *)&dificultad, filtrarPreguntas) != OK)
+        return FALLA_MEMORIA;
+    dejarNelementos(partidaActual, rounds);
+    return OK;
+}
+
+void mostrarPregunta(dsLista *listaPreguntas, const char respuestaCorrecta)
+{
+    tPregunta *pregunta = (tPregunta *)(*listaPreguntas)->data;
+    printf("%s", pregunta->pregunta);
+    switch (respuestaCorrecta)
+    {
+    case 'A':
+        printf("[A] %s\n[B] %s\n[C] %s\n[D] %s\n", pregunta->resp_correcta, 
+                pregunta->opcion_3, pregunta->opcion_2, pregunta->opcion_1);
+        break;
+    case 'B':
+        printf("[A] %s\n[B] %s\n[C] %s\n[D] %s\n", pregunta->opcion_2, 
+            pregunta->resp_correcta, pregunta->opcion_3, pregunta->opcion_1);
+        break;
+    case 'C':
+        printf("[A] %s\n[B] %s\n[C] %s\n[D] %s\n", pregunta->opcion_3, 
+            pregunta->opcion_1, pregunta->resp_correcta, pregunta->opcion_2);
+        break;
+    case 'D':
+        printf("[A] %s\n[B] %s\n[C] %s\n[D] %s\n", pregunta->opcion_1, 
+            pregunta->opcion_2, pregunta->opcion_3, pregunta->resp_correcta);
+        break;
+    }
+}
+
