@@ -1,7 +1,5 @@
 #include "juego.h"
-#include "../Utilidades/utilidades.h"
-#include "../Utilidades/interfazLista.h"
-#include "../Jugadores/jugadores.h"
+
 
 int menu(void)
 {
@@ -47,6 +45,30 @@ int cantidadJugadores(void)
     return cantidad;
 }
 
+int seleccionDificultad(void)
+{
+    int dificultad;
+    char aux;
+    short error = 0;
+    do
+    {
+        system("cls");
+        if(error)
+            printf("Error en el ingreso.\n");
+        error = 0;
+        printf("Seleccionar dificultad\n\t[1] Facil\n\t[2] Medio\n\t[3] Dificil\n");
+        printf("Ingrese un valor: ");
+        aux = getc(stdin);
+        fflush(stdin);
+        if(aux < '1' || aux > '3')
+            error = 1;
+    }while(error);
+
+    dificultad = atoi(&aux);
+
+    return dificultad;
+}
+
 int configurarPartida(int *rounds, int *tiempo)
 {
     FILE *archivoConfig = fopen(ARCHIVO_CONFIG, "r");
@@ -62,16 +84,28 @@ int configurarPartida(int *rounds, int *tiempo)
     }
 
     fclose(archivoConfig);
+
+    printf("La configuracion establece %d rounds de %d segundos\n", 
+                *rounds, *tiempo);
     return OK;
+}
+
+void gestionErrores(int error, int nroJugadores, dsLista *jugadores, dsLista *preguntas, dsLista *filtradas)
+{
+    manejoErrores(error);
+    vaciarListaJugadores(jugadores, nroJugadores);
+    vaciarLista(preguntas);
+    vaciarLista(filtradas);
+
+    printf("Lamentamos el inconveniente\n");
+    system("pause");
+    exit(EXIT_FAILURE);
 }
 
 void gui(void)
 {
-    int cantJugadores, error, tiempoRound, rounds;
-    dsLista jugadores, preguntas;
-
-    nuevaLista(&jugadores);
-    nuevaLista(&preguntas);
+    int cantJugadores, error, tiempoRound, rounds, dificultad;
+    dsLista jugadores, preguntasPartida, preguntas;
 
     if((error = configurarPartida(&rounds, &tiempoRound)) != OK)
     {
@@ -79,27 +113,31 @@ void gui(void)
         return;
     }
     
+    nuevaLista(&jugadores);
+    nuevaLista(&preguntas); // Tiene todas las preguntas
+    nuevaLista(&preguntasPartida); // preguntas filtradas por dificultad y rounds
+    
+    //obtenerPreguntas();
+
     while (menu()) // 1 si quiere jugar, de lo contrario no se ejecuta.
     {
-        // obtengo preguntas en api
-        // muestro rounds y tiempo [Puede tener error]
 
+        dificultad = seleccionDificultad();
         cantJugadores = cantidadJugadores();
-        printf("La configuracion establece %d rounds de %d segundos\n", 
-                rounds, tiempoRound);
         if((error = getJugadores(&jugadores, cantJugadores, rounds)) != OK)
-        {
-            manejoErrores(error);
-            vaciarListaJugadores(&jugadores, cantJugadores);
-            return;
-        }
+            gestionErrores(error, cantJugadores, &jugadores, &preguntas, &preguntasPartida);
+
         system("cls");
         mostrarJugadores(&jugadores);
         system("pause");
 
+
         //generarInforme
         vaciarListaJugadores(&jugadores, cantJugadores);
-        //vaciarListaPreguntas
+        vaciarLista(&preguntasPartida);
     }
+    vaciarLista(&preguntas);
+    printf("Gracias por participar!\n");
+    system("pause");
 }
 //TODO: errorEnPartida: función que imprima el error y limpie las listas.
