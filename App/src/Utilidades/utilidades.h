@@ -20,6 +20,11 @@
               puntajeFinal;
     }tJugador;
 
+    typedef struct{
+        char  *string;
+        size_t size;
+    }tRespuesta;
+
     typedef struct
     {
         char pregunta[150],
