@@ -85,6 +85,12 @@ int manejoArchivoConfig(int *rounds, int *tiempo)
 
     fclose(archivoConfig);
 
+    if(*rounds < 4 || *rounds > 7)
+    {
+        perror("La cantidad de rounds excede los limites\n");
+        return FALLA_ARCHIVO_CONFIG;
+    }
+
     printf("La configuracion establece %d rounds de %d segundos\n", 
                 *rounds, *tiempo);
     return OK;
@@ -121,7 +127,7 @@ void gui(void)
     dsLista jugadores, preguntasPartida, preguntas;
  
     nuevaLista(&preguntas); // Tiene todas las preguntas
-    configurarPartida(&rounds, &tiempoRound, &preguntas);
+    configurarPartida(&rounds, &tiempoRound, &preguntas); 
 
     nuevaLista(&jugadores);
     nuevaLista(&preguntasPartida); // preguntas filtradas por dificultad y rounds  
@@ -148,4 +154,3 @@ void gui(void)
     printf("Gracias por participar!\n");
     system("pause");
 }
-//TODO: errorEnPartida: función que imprima el error y limpie las listas.
