@@ -69,7 +69,7 @@ int seleccionDificultad(void)
     return dificultad;
 }
 
-int configurarPartida(int *rounds, int *tiempo)
+int manejoArchivoConfig(int *rounds, int *tiempo)
 {
     FILE *archivoConfig = fopen(ARCHIVO_CONFIG, "r");
 
@@ -102,22 +102,29 @@ void gestionErrores(int error, int nroJugadores, dsLista *jugadores, dsLista *pr
     exit(EXIT_FAILURE);
 }
 
+void configurarPartida(int *rounds, int *tiempo, dsLista *preguntas)
+{
+    int error;
+    
+    if((error = manejoArchivoConfig(rounds, tiempo)) != OK ||(error = obtenerPreguntas(preguntas)) != OK)
+    {
+        manejoErrores(error);
+        printf("Lamentamos el inconveniente\n");
+        system("pause");
+        exit(EXIT_FAILURE);
+    }
+}
+
 void gui(void)
 {
     int cantJugadores, error, tiempoRound, rounds, dificultad;
     dsLista jugadores, preguntasPartida, preguntas;
-
-    if((error = configurarPartida(&rounds, &tiempoRound)) != OK)
-    {
-        manejoErrores(error);
-        return;
-    }
-    
-    nuevaLista(&jugadores);
+ 
     nuevaLista(&preguntas); // Tiene todas las preguntas
-    nuevaLista(&preguntasPartida); // preguntas filtradas por dificultad y rounds
-    
-    //obtenerPreguntas();
+    configurarPartida(&rounds, &tiempoRound, &preguntas);
+
+    nuevaLista(&jugadores);
+    nuevaLista(&preguntasPartida); // preguntas filtradas por dificultad y rounds  
 
     while (menu()) // 1 si quiere jugar, de lo contrario no se ejecuta.
     {
@@ -136,6 +143,7 @@ void gui(void)
         vaciarListaJugadores(&jugadores, cantJugadores);
         vaciarLista(&preguntasPartida);
     }
+    
     vaciarLista(&preguntas);
     printf("Gracias por participar!\n");
     system("pause");
