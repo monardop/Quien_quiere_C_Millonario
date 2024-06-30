@@ -22,7 +22,8 @@
     // Funciones particulares para la app
     void algoritmoFisherYates(dsLista *lista, unsigned ce);
     void listMap(dsLista *lista, lambda func);
-    void listFilter(dsLista *lista, cmp cmp);
+    int  listFilter(dsLista *listaDestino, dsLista *listaOrigen, const void *parametro, cmp cmp);
     void listReduce(dsLista *lista, void* container, reduceFunc func); 
+    void dejarNelementos(dsLista *lista, int cantidadFinal);
 
 #endif
