@@ -7,7 +7,7 @@ int getJugadores(dsLista *pl, const int cantJugadores, const int rounds)
     {
         tJugador nuevo;
         printf("Nombre del jugador %d: ", i + 1);
-        fgets(nuevo.nombre, 150, stdin);
+        fgets(nuevo.nombre, 50, stdin);
         fflush(stdin);
         limpiarCadena(nuevo.nombre);
         if(strlen(nuevo.nombre) == 0) // 

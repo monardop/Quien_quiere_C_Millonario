@@ -15,7 +15,7 @@
 
     typedef struct
     {
-        char  nombre[150];
+        char  nombre[50];
         char *respuestas;
         int  *tiempoDeRespuesta,
              *puntajeFinal;
