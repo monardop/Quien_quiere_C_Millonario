@@ -186,10 +186,10 @@ void gui(void)
         if((error = seccionPreguntas(&preguntasActuales,&jugadores,rounds, cantJugadores, tiempoRound , respuestasCorrectas)) != OK)
             gestionErrores(error, cantJugadores, &jugadores, &preguntas, &preguntasActuales);
 
-        
+        if((error = crearInforme(cantJugadores, rounds, &jugadores, &preguntasActuales, respuestasCorrectas)) != OK)
+            gestionErrores(error, cantJugadores, &jugadores, &preguntas, &preguntasActuales);
 
-        //generarInforme
-        // mostrar ganadores
+        system("pause");
         vaciarListaJugadores(&jugadores, cantJugadores);
         vaciarLista(&preguntasActuales);
     }
