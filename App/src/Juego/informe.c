@@ -1,11 +1,5 @@
 #include "juego.h"
 
-//sumar puntajes.
-//leer puntajeJugador que cargue el vector puntajes
-// definir ganador y mostrar en pantalla.
-// crear el .txt
-
-
 void sumarPuntaje(const tJugador *jugador, int *vecPuntajes, const int rounds)
 {
     int resultado = 0; 
@@ -104,7 +98,59 @@ int declararGanadores(const int *vec, dsLista *jugadores, char *nombreArchivo, c
     return OK;
 }
 
-int crearInforme(const int cantJugadores, const int rounds, dsLista *jugadores, dsLista *preguntas)
+int generarInforme(char *nombreInforme, int *resultados, dsLista *jugadores, dsLista *preguntas, const char *respuestas)
+{
+    FILE *archivoInforme;
+    tNodo *aux;
+    tPregunta *pregunta;
+    tJugador *jugador;
+    int i;
+
+    if((archivoInforme = fopen(nombreInforme, "w")) == NULL)
+        return FALLA_ARCHIVO_RESULTADO;
+    
+    aux = (*preguntas)->next;
+    i = 0;
+    do
+    {
+        pregunta = (tPregunta *)aux->data;
+        fprintf(archivoInforme, "%d ", i+1);
+        mostrarPregunta(pregunta, respuestas[i], archivoInforme);
+        fprintf(archivoInforme, "Respuesta correcta: %c", respuestas[i]);
+        fprintf(archivoInforme, "\n\n");
+        aux = aux->next;
+        i++;
+    } while (aux != (*preguntas)->next);
+    
+    
+    fprintf(archivoInforme, "        Jugador|");
+    for (int j = 0; j < i; j++)
+    {
+        fprintf(archivoInforme, " Pregunta %d: [%c]  |", j+1 , respuestas[j]);
+    }
+    fprintf(archivoInforme, "Puntaje Final|\n");
+
+    aux = (*jugadores)->next;
+    do
+    {
+        jugador = (tJugador *)aux->data;
+        fprintf(archivoInforme, "%15s|", jugador->nombre);
+        for (int j = 0; j < i; j++)
+        {
+            fprintf(archivoInforme, " [%c][%+02ds][%+dptos] |", jugador->respuestas[j],
+                    jugador->tiempoDeRespuesta[j], jugador->puntajeFinal[j]);
+        }
+        fprintf(archivoInforme, "  [%+03dptos]|\n", *resultados);
+        resultados++;
+        aux = aux->next;
+    } while (aux != (*jugadores)->next);
+
+    fclose(archivoInforme);
+
+    return OK;
+}
+
+int crearInforme(const int cantJugadores, const int rounds, dsLista *jugadores, dsLista *preguntas, const char *respuestas)
 {
     int *puntajesFinales;
     char nombreArchivo[200];
@@ -115,12 +161,19 @@ int crearInforme(const int cantJugadores, const int rounds, dsLista *jugadores, 
 
     cargarVectorPuntajes(jugadores, puntajesFinales, rounds);
 
-    if(declararGanadores(puntajesFinales,jugadores,nombreArchivo,cantJugadores) != OK)
+    if(generarInforme(nombreArchivo,puntajesFinales,jugadores,preguntas, respuestas) != OK)
+    {
+        free(puntajesFinales);
         return FALLA_ARCHIVO_RESULTADO;
+    }
+
+    if(declararGanadores(puntajesFinales,jugadores,nombreArchivo,cantJugadores) != OK)
+    {
+        free(puntajesFinales);
+        return FALLA_ARCHIVO_RESULTADO;
+    }
 
     free(puntajesFinales);
-
-
 
     return OK;
 }
