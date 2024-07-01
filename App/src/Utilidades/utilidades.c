@@ -49,5 +49,8 @@ void manejoErrores(const int error)
         case FALLA_ARCHIVO_RESULTADO:
             printf("Hubo un problema al crear el informe de resultados.\n");
             break;
+        case FALLA_TEMPORIZADOR:
+            printf("Hubo un problema al establecer el timer.\n");
+            break;
     }
 }
