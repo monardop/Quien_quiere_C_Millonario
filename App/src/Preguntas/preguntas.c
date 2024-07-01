@@ -12,7 +12,7 @@ char *copiarString(char *destino, char *origen)
         destino++;
         origen++;
     }
-    *(destino + 1) = '\0';
+    *destino = '\0';
 
     return (origen + 1);
 }
@@ -81,23 +81,23 @@ int preguntasPartida(dsLista *preguntas, dsLista *partidaActual, int rounds, int
 
 void mostrarPregunta(tPregunta *pregunta, const char respuestaCorrecta)
 {
-    printf("%s", pregunta->pregunta);
+    printf("%s\n", pregunta->pregunta);
     switch (respuestaCorrecta)
     {
     case 'A':
-        printf("[A] %s\n[B] %s\n[C] %s\n[D] %s\n", pregunta->resp_correcta, 
+        printf("\t[A] %s\n\t[B] %s\n\t[C] %s\n\t[D] %s\n", pregunta->resp_correcta, 
                 pregunta->opcion_3, pregunta->opcion_2, pregunta->opcion_1);
         break;
     case 'B':
-        printf("[A] %s\n[B] %s\n[C] %s\n[D] %s\n", pregunta->opcion_2, 
+        printf("\t[A] %s\n\t[B] %s\n\t[C] %s\n\t[D] %s\n", pregunta->opcion_2, 
             pregunta->resp_correcta, pregunta->opcion_3, pregunta->opcion_1);
         break;
     case 'C':
-        printf("[A] %s\n[B] %s\n[C] %s\n[D] %s\n", pregunta->opcion_3, 
+        printf("\t[A] %s\n\t[B] %s\n\t[C] %s\n\t[D] %s\n", pregunta->opcion_3, 
             pregunta->opcion_1, pregunta->resp_correcta, pregunta->opcion_2);
         break;
     case 'D':
-        printf("[A] %s\n[B] %s\n[C] %s\n[D] %s\n", pregunta->opcion_1, 
+        printf("\t[A] %s\n\t[B] %s\n\t[C] %s\n\t[D] %s\n", pregunta->opcion_1, 
             pregunta->opcion_2, pregunta->opcion_3, pregunta->resp_correcta);
         break;
     }
@@ -106,7 +106,7 @@ void mostrarPregunta(tPregunta *pregunta, const char respuestaCorrecta)
 void crearRespuestasCorrectas(char *vec, const int rounds)
 {
     int numRandom;
-    for(int i = rounds; i > 0; i--)
+    for(int i = 0; i < rounds; i++)
     {
         numRandom = rand() % 4;
         switch (numRandom)
@@ -129,7 +129,6 @@ void crearRespuestasCorrectas(char *vec, const int rounds)
 }
 
 void CALLBACK TimerProc(HWND hWnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime) {
-    printf("\nTiempo agotado. Pasando a la siguiente pregunta.\n");
     PostQuitMessage(0); // Finaliza el bucle de mensajes
 }
 
@@ -154,6 +153,7 @@ int mostrarPreguntaConTiempo(tPregunta *pregunta,tJugador *jugador,  int tiempoL
     while (1) {
         if (_kbhit()) {
             respuesta = _getch();
+            respuesta = toUpper(respuesta);
             currentTime = GetTickCount();
             if (respuesta == 'A' || respuesta == 'B' || respuesta == 'C' || respuesta == 'D') {
                 KillTimer(NULL, timerId); // Cancela el temporizador si se responde a tiempo
@@ -162,6 +162,11 @@ int mostrarPreguntaConTiempo(tPregunta *pregunta,tJugador *jugador,  int tiempoL
                 jugador->respuestas[round] = respuesta;
                 jugador->tiempoDeRespuesta[round] = tiempoTranscurrido;
                 
+                if(respuesta == rta)
+                    jugador->puntajeFinal[round] = 1;
+                else
+                    jugador->puntajeFinal[round] = -2;
+
                 return OK;
             } else {
                 tiempoRestante = tiempoLimite - (currentTime - startTime) / 1000;
@@ -188,5 +193,8 @@ int mostrarPreguntaConTiempo(tPregunta *pregunta,tJugador *jugador,  int tiempoL
     KillTimer(NULL, timerId); // Cancela el temporizador
     jugador->respuestas[round] = '-';
     jugador->tiempoDeRespuesta[round] = -1;
+    jugador->puntajeFinal[round] = 0;
+    printf("\nTiempo agotado. Pasando a la siguiente pregunta.\n");
+
     return OK;
 }
