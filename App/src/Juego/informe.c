@@ -140,7 +140,7 @@ int generarInforme(char *nombreInforme, int *resultados, dsLista *jugadores, dsL
             fprintf(archivoInforme, " [%c][%2ds][%+dptos] |", jugador->respuestas[j],
                     jugador->tiempoDeRespuesta[j], jugador->puntajeFinal[j]);
         }
-        fprintf(archivoInforme, "   [%+04dptos]   |\n", *resultados);
+        fprintf(archivoInforme, "   [%+03dptos]    |\n", *resultados);
         resultados++;
         aux = aux->next;
     } while (aux != (*jugadores)->next);
