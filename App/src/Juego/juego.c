@@ -1,6 +1,5 @@
 #include "juego.h"
 
-
 int menu(void)
 {
     char seleccion;
@@ -121,33 +120,67 @@ void configurarPartida(int *rounds, int *tiempo, dsLista *preguntas)
     }
 }
 
+
+int seccionPreguntas(dsLista *preguntas, dsLista *jugadores, const int rounds, const int nJugadores, const int tiempo)
+{
+    char respuestasCorrectas[8];
+    int i, j;
+    tPregunta *preguntaActual;
+    tJugador *jugadorActual;
+
+    crearRespuestasCorrectas(respuestasCorrectas, rounds);
+
+    for(i = 0; i < nJugadores; i++)
+    {
+        jugadores = &(*jugadores)->next;
+        jugadorActual = (tJugador *)(*jugadores)->data;
+        printf("Turno de: %s\n", jugadorActual->nombre);
+        system("pause");
+        for(j = 0; j < rounds; j++)
+        {
+            preguntas = &(*preguntas)->next;
+            preguntaActual = (tPregunta *)(*preguntas)->data;
+            if(mostrarPreguntaConTiempo(preguntaActual,jugadorActual,tiempo, rounds, respuestasCorrectas[j]) != OK)
+                return FALLA_TEMPORIZADOR;
+            system("pause");
+        }
+    }
+    return OK;
+}
+
 void gui(void)
 {
     int cantJugadores, error, tiempoRound, rounds, dificultad;
-    dsLista jugadores, preguntasPartida, preguntas;
+    dsLista jugadores, preguntasActuales, preguntas;
  
     nuevaLista(&preguntas); // Tiene todas las preguntas
     configurarPartida(&rounds, &tiempoRound, &preguntas); 
 
     nuevaLista(&jugadores);
-    nuevaLista(&preguntasPartida); // preguntas filtradas por dificultad y rounds  
+    nuevaLista(&preguntasActuales); // preguntas filtradas por dificultad y rounds  
 
     while (menu()) // 1 si quiere jugar, de lo contrario no se ejecuta.
     {
-
         dificultad = seleccionDificultad();
         cantJugadores = cantidadJugadores();
         if((error = getJugadores(&jugadores, cantJugadores, rounds)) != OK)
-            gestionErrores(error, cantJugadores, &jugadores, &preguntas, &preguntasPartida);
+            gestionErrores(error, cantJugadores, &jugadores, &preguntas, &preguntasActuales);
 
         system("cls");
         mostrarJugadores(&jugadores);
         system("pause");
 
+        // Obtengo preguntas específicas para esta partida, creo una segunda lista desde la original.
+        if((error = preguntasPartida(&preguntas, &preguntasActuales, rounds, dificultad)) != OK)
+            gestionErrores(error, cantJugadores, &jugadores, &preguntas, &preguntasActuales);
+        
+        // Empieza el juego.
+        if((error = seccionPreguntas(&preguntasActuales,&jugadores,rounds, cantJugadores, tiempoRound )) != OK)
+            gestionErrores(error, cantJugadores, &jugadores, &preguntas, &preguntasActuales);
 
         //generarInforme
         vaciarListaJugadores(&jugadores, cantJugadores);
-        vaciarLista(&preguntasPartida);
+        vaciarLista(&preguntasActuales);
     }
     
     vaciarLista(&preguntas);
