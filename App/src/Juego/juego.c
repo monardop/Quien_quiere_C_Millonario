@@ -120,9 +120,8 @@ void configurarPartida(int *rounds, int *tiempo, dsLista *preguntas)
     }
 }
 
-int seccionPreguntas(dsLista *preguntas, dsLista *jugadores, const int rounds, const int nJugadores, const int tiempo)
+int seccionPreguntas(dsLista *preguntas, dsLista *jugadores, const int rounds, const int nJugadores, const int tiempo, char *respuestasCorrectas)
 {
-    char respuestasCorrectas[8];
     int i, j;
     tPregunta *preguntaActual;
     tJugador *jugadorActual;
@@ -147,6 +146,11 @@ int seccionPreguntas(dsLista *preguntas, dsLista *jugadores, const int rounds, c
             system("pause"); 
         }
     }
+
+    for (i = 0; i < rounds; i++)
+    {
+        modificarPuntaje(respuestasCorrectas[i], jugadores, i);
+    }
     
     system("pause");
     return OK;
@@ -154,6 +158,7 @@ int seccionPreguntas(dsLista *preguntas, dsLista *jugadores, const int rounds, c
 
 void gui(void)
 {
+    char respuestasCorrectas[8];
     int cantJugadores, error, tiempoRound, rounds, dificultad;
     dsLista jugadores, preguntasActuales, preguntas;
  
@@ -173,16 +178,18 @@ void gui(void)
         system("cls");
         mostrarJugadores(&jugadores);
         system("pause");
-
         // Obtengo preguntas específicas para esta partida, creo una segunda lista desde la original.
         if((error = preguntasPartida(&preguntas, &preguntasActuales, rounds, dificultad)) != OK)
             gestionErrores(error, cantJugadores, &jugadores, &preguntas, &preguntasActuales);
         
         // Empieza el juego.
-        if((error = seccionPreguntas(&preguntasActuales,&jugadores,rounds, cantJugadores, tiempoRound )) != OK)
+        if((error = seccionPreguntas(&preguntasActuales,&jugadores,rounds, cantJugadores, tiempoRound , respuestasCorrectas)) != OK)
             gestionErrores(error, cantJugadores, &jugadores, &preguntas, &preguntasActuales);
 
+        
+
         //generarInforme
+        // mostrar ganadores
         vaciarListaJugadores(&jugadores, cantJugadores);
         vaciarLista(&preguntasActuales);
     }
