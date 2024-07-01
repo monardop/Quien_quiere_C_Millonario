@@ -1,3 +1,6 @@
+#include <windows.h>
+#include <conio.h>
+
 #include "preguntas.h"
 
 char *copiarString(char *destino, char *origen)
@@ -76,9 +79,8 @@ int preguntasPartida(dsLista *preguntas, dsLista *partidaActual, int rounds, int
     return OK;
 }
 
-void mostrarPregunta(dsLista *listaPreguntas, const char respuestaCorrecta)
+void mostrarPregunta(tPregunta *pregunta, const char respuestaCorrecta)
 {
-    tPregunta *pregunta = (tPregunta *)(*listaPreguntas)->data;
     printf("%s", pregunta->pregunta);
     switch (respuestaCorrecta)
     {
@@ -101,3 +103,90 @@ void mostrarPregunta(dsLista *listaPreguntas, const char respuestaCorrecta)
     }
 }
 
+void crearRespuestasCorrectas(char *vec, const int rounds)
+{
+    int numRandom;
+    for(int i = rounds; i > 0; i--)
+    {
+        numRandom = rand() % 4;
+        switch (numRandom)
+        {
+        case 0:
+            vec[i] = 'A';
+            break;
+        case 1:
+            vec[i] = 'B';
+            break;
+        case 2:
+            vec[i] = 'C';
+            break;
+        case 3:
+            vec[i] = 'D';
+            break;
+        }
+    }
+    vec[rounds] = '\0';
+}
+
+void CALLBACK TimerProc(HWND hWnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime) {
+    printf("\nTiempo agotado. Pasando a la siguiente pregunta.\n");
+    PostQuitMessage(0); // Finaliza el bucle de mensajes
+}
+
+int mostrarPreguntaConTiempo(tPregunta *pregunta,tJugador *jugador,  int tiempoLimite, int round, const char rta) 
+{
+    MSG msg;
+    UINT_PTR timerId = SetTimer(NULL, 0, tiempoLimite * 1000, TimerProc); // Configura el temporizador
+
+    char respuesta;
+    int tiempoRestante = tiempoLimite;
+    DWORD startTime = GetTickCount();
+    DWORD currentTime;
+    int tiempoTranscurrido;
+
+    if (timerId == 0) {
+        fprintf(stderr, "Error al configurar el temporizador.\n");
+        return FALLA_TEMPORIZADOR;
+    }
+
+    mostrarPregunta(pregunta,rta);
+
+    while (1) {
+        if (_kbhit()) {
+            respuesta = _getch();
+            currentTime = GetTickCount();
+            if (respuesta == 'A' || respuesta == 'B' || respuesta == 'C' || respuesta == 'D') {
+                KillTimer(NULL, timerId); // Cancela el temporizador si se responde a tiempo
+                tiempoTranscurrido = (currentTime - startTime) / 1000;
+                printf("\nRespuesta recibida: %c en %d segundos\n", respuesta, tiempoTranscurrido);
+                jugador->respuestas[round] = respuesta;
+                jugador->tiempoDeRespuesta[round] = tiempoTranscurrido;
+                
+                return OK;
+            } else {
+                tiempoRestante = tiempoLimite - (currentTime - startTime) / 1000;
+                if (tiempoRestante <= 0) {
+                    break;
+                }
+                printf("\nError al ingresar. Por favor ingrese A/B/C/D. Le quedan %d segundos: ", tiempoRestante);
+            }
+        }
+
+        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+            if (msg.message == WM_TIMER) {
+                break;
+            }
+        }
+
+        currentTime = GetTickCount();
+        tiempoRestante = tiempoLimite - (currentTime - startTime) / 1000;
+        if (tiempoRestante <= 0) {
+            break;
+        }
+    }
+
+    KillTimer(NULL, timerId); // Cancela el temporizador
+    jugador->respuestas[round] = '-';
+    jugador->tiempoDeRespuesta[round] = -1;
+    return OK;
+}
