@@ -65,3 +65,91 @@ void mostrarJugadores(dsLista *pl)
 {
     listMap(pl, imprimirJugador);
 }
+
+/******************************************************************************
+* @Descripción:
+* Recorro la lista de jugadores cargando el tiempo que tardaron. Una vez 
+* cargados, busco el menor. Si hay un tiempo menor, lo guardo y asigno el 
+* extra de puntos a quien corresponda.
+******************************************************************************/
+int menorTiempo(const int *vec, const int cantElem)
+{
+    int menorTiempo = vec[0];
+
+    for(int i = 0; i < cantElem; i++)
+    {
+        if(vec[i] > -1 && vec[i] < menorTiempo)
+            menorTiempo = vec[i];
+    }
+    
+    return menorTiempo;
+}
+
+int cargarVectorTiempos(dsLista *jugadores, int *vec, const char respuestaCorrecta, const int round)
+{   
+    int i = 0;
+    tNodo *aux = (*jugadores)->next; 
+    tJugador *jugador;
+
+    do
+    {
+        jugador = (tJugador *)aux->data;
+        
+        if(jugador->respuestas[i] == respuestaCorrecta)
+            vec[i] = jugador->tiempoDeRespuesta[round];
+        else    
+            vec[i] = -1;
+        aux = aux->next;
+        i++;
+    }while(aux != (*jugadores)->next);
+
+    return i;
+}
+
+void actualizarPuntaje(dsLista *jugadores, const int masRapido, const int cantidadCorrectas, const int *vec)
+{
+    int i = 0;
+    tNodo *aux = (*jugadores)->next; 
+    tJugador *jugador;
+
+    do
+    {
+        jugador = (tJugador *)aux->data;
+        
+        if(vec[i] == masRapido)
+        {
+            if(cantidadCorrectas > 1)
+                jugador->puntajeFinal[i] += 1;
+            else
+                jugador->puntajeFinal[i] += 2;
+        }
+            
+        aux = aux->next;
+        i++;
+    }while(aux != (*jugadores)->next);
+}
+
+void modificarPuntaje(char respuestaCorrecta, dsLista *jugadores, const int round)
+{
+    int tiempos[7], // no puede haber más de 7 rounds
+        masRapido, 
+        elementos,
+        cantidadCorrecta = 0;
+
+    elementos = cargarVectorTiempos(jugadores, tiempos, respuestaCorrecta, round);
+
+    masRapido = menorTiempo(tiempos, elementos);
+
+    if(masRapido == -1)
+        return; // -1 significa que nadie respondió correctamente y no hay que actualizar nada
+    
+    for (size_t j = 0; j < elementos; j++)
+    {
+        if(tiempos[j] == masRapido){
+            cantidadCorrecta++; // chequeo cuantos respondieron en ese tiempo
+        }
+    }
+    
+    actualizarPuntaje(jugadores, masRapido, cantidadCorrecta, tiempos);
+    
+}
