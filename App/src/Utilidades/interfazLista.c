@@ -153,7 +153,7 @@ int listFilter(dsLista *listaDestino, dsLista *listaOrigen, const void *parametr
     aux = (*listaOrigen)->next;
     do
     {
-        if(cmp(parametro, (void *)aux) == 1)
+        if(cmp(parametro, (const void *)aux->data) == 1)
         {
             if(agregarElemento(listaDestino, aux->data, aux->dataSize) != OK)
                 return FALLA_MEMORIA;
@@ -168,16 +168,18 @@ int contarElementos(dsLista *lista)
 {
     tNodo* aux;
     int i = 0;
-    if(!(*lista))
+    if(*lista == NULL)
     {
         return 0;
     }
     aux = (*lista)->next;
-    while(aux != (*lista)->next)
+    
+    do
     {
         i++;
         aux = aux->next;
-    }
+    }while(aux != (*lista)->next);
+
     return i;
 }
 
@@ -185,12 +187,14 @@ void borrarElementoN(dsLista *lista, int elemento)
 {
     tNodo *nodoBorrar;
 
-    for(;elemento > 0; elemento--)
+    lista = &(*lista)->next;
+
+    for(int i = 0; i < elemento; i++)
     {
         lista = &(*lista)->next;
     }
     nodoBorrar = *lista;
-    (*lista)->next = nodoBorrar->next;
+    *lista = nodoBorrar->next;
     free(nodoBorrar->data);
     free(nodoBorrar);
 }
