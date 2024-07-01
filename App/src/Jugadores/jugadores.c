@@ -16,10 +16,14 @@ int getJugadores(dsLista *pl, const int cantJugadores, const int rounds)
             i--;
         }else
         {
-            nuevo.respuestas = (char *)malloc(rounds);
+            nuevo.respuestas = (char *)malloc(rounds + 1);
             nuevo.tiempoDeRespuesta = (int *)malloc(rounds * sizeof(int));
-            if(nuevo.respuestas == NULL || nuevo.tiempoDeRespuesta == NULL)
+            nuevo.puntajeFinal = (int *)malloc(rounds * sizeof(int));
+            if(nuevo.respuestas == NULL || nuevo.tiempoDeRespuesta == NULL || nuevo.puntajeFinal == NULL)
                 return FALLA_MEMORIA;
+            
+            memset(nuevo.puntajeFinal, 0, rounds);
+            memset(nuevo.tiempoDeRespuesta, 0, rounds);
             if(agregarElemento(pl, &nuevo, sizeof(tJugador)) != OK)
                 return FALLA_MEMORIA;
         } 
@@ -42,6 +46,7 @@ void liberarJugador(void *jugador)
     
     free(actual->respuestas);
     free(actual->tiempoDeRespuesta);
+    free(actual->puntajeFinal);
 }
 
 void vaciarListaJugadores(dsLista *pl, const int cantJugadores)

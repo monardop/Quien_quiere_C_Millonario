@@ -18,7 +18,7 @@
         char  nombre[150];
         char *respuestas;
         int  *tiempoDeRespuesta,
-              puntajeFinal;
+             *puntajeFinal;
     }tJugador;
 
     typedef struct{
