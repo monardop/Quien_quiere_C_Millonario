@@ -36,7 +36,7 @@ int parseoPreguntas(dsLista *preguntas, char *jsonPreguntas)
 
         if(agregarElemento(preguntas, (void*)&aux, sizeof(tPregunta)) != OK)
             return FALLA_MEMORIA;
-        
+
     }
 
     return OK;
@@ -51,7 +51,7 @@ int obtenerPreguntas(dsLista *preguntas)
         free(respuesta.string);
         return FALLA_CURL;
     }
-
+    
     if (parseoPreguntas(preguntas, respuesta.string) != OK)
     {
         vaciarLista(preguntas);
@@ -85,19 +85,19 @@ void mostrarPregunta(tPregunta *pregunta, const char respuestaCorrecta, FILE *fi
     switch (respuestaCorrecta)
     {
     case 'A':
-        fprintf(fileBuffer,"\t[A] %s\n\t[B] %s\n\t[C] %s\n\t[D] %s\n", pregunta->resp_correcta, 
+        fprintf(fileBuffer,"\t[A] %s\n\t[B] %s\n\t[C] %s\n\t[D] %s\n", pregunta->resp_correcta,
                 pregunta->opcion_3, pregunta->opcion_2, pregunta->opcion_1);
         break;
     case 'B':
-        fprintf(fileBuffer,"\t[A] %s\n\t[B] %s\n\t[C] %s\n\t[D] %s\n", pregunta->opcion_2, 
+        fprintf(fileBuffer,"\t[A] %s\n\t[B] %s\n\t[C] %s\n\t[D] %s\n", pregunta->opcion_2,
             pregunta->resp_correcta, pregunta->opcion_3, pregunta->opcion_1);
         break;
     case 'C':
-        fprintf(fileBuffer,"\t[A] %s\n\t[B] %s\n\t[C] %s\n\t[D] %s\n", pregunta->opcion_3, 
+        fprintf(fileBuffer,"\t[A] %s\n\t[B] %s\n\t[C] %s\n\t[D] %s\n", pregunta->opcion_3,
             pregunta->opcion_1, pregunta->resp_correcta, pregunta->opcion_2);
         break;
     case 'D':
-        fprintf(fileBuffer,"\t[A] %s\n\t[B] %s\n\t[C] %s\n\t[D] %s\n", pregunta->opcion_1, 
+        fprintf(fileBuffer,"\t[A] %s\n\t[B] %s\n\t[C] %s\n\t[D] %s\n", pregunta->opcion_1,
             pregunta->opcion_2, pregunta->opcion_3, pregunta->resp_correcta);
         break;
     }
@@ -132,7 +132,7 @@ void CALLBACK TimerProc(HWND hWnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime) {
     PostQuitMessage(0); // Finaliza el bucle de mensajes
 }
 
-int mostrarPreguntaConTiempo(tPregunta *pregunta,tJugador *jugador,  int tiempoLimite, int round, const char rta) 
+int mostrarPreguntaConTiempo(tPregunta *pregunta,tJugador *jugador,  int tiempoLimite, int round, const char rta)
 {
     MSG msg;
     UINT_PTR timerId = SetTimer(NULL, 0, tiempoLimite * 1000, TimerProc); // Configura el temporizador
@@ -161,7 +161,7 @@ int mostrarPreguntaConTiempo(tPregunta *pregunta,tJugador *jugador,  int tiempoL
                 printf("\nRespuesta recibida: %c en %d segundos\n", respuesta, tiempoTranscurrido);
                 jugador->respuestas[round] = respuesta;
                 jugador->tiempoDeRespuesta[round] = tiempoTranscurrido;
-                
+
                 if(respuesta == rta)
                     jugador->puntajeFinal[round] = 1;
                 else
