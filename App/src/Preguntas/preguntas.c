@@ -79,25 +79,25 @@ int preguntasPartida(dsLista *preguntas, dsLista *partidaActual, int rounds, int
     return OK;
 }
 
-void mostrarPregunta(tPregunta *pregunta, const char respuestaCorrecta)
+void mostrarPregunta(tPregunta *pregunta, const char respuestaCorrecta, FILE *fileBuffer)
 {
-    printf("%s\n", pregunta->pregunta);
+    fprintf(fileBuffer, "%s\n", pregunta->pregunta);
     switch (respuestaCorrecta)
     {
     case 'A':
-        printf("\t[A] %s\n\t[B] %s\n\t[C] %s\n\t[D] %s\n", pregunta->resp_correcta, 
+        fprintf(fileBuffer,"\t[A] %s\n\t[B] %s\n\t[C] %s\n\t[D] %s\n", pregunta->resp_correcta, 
                 pregunta->opcion_3, pregunta->opcion_2, pregunta->opcion_1);
         break;
     case 'B':
-        printf("\t[A] %s\n\t[B] %s\n\t[C] %s\n\t[D] %s\n", pregunta->opcion_2, 
+        fprintf(fileBuffer,"\t[A] %s\n\t[B] %s\n\t[C] %s\n\t[D] %s\n", pregunta->opcion_2, 
             pregunta->resp_correcta, pregunta->opcion_3, pregunta->opcion_1);
         break;
     case 'C':
-        printf("\t[A] %s\n\t[B] %s\n\t[C] %s\n\t[D] %s\n", pregunta->opcion_3, 
+        fprintf(fileBuffer,"\t[A] %s\n\t[B] %s\n\t[C] %s\n\t[D] %s\n", pregunta->opcion_3, 
             pregunta->opcion_1, pregunta->resp_correcta, pregunta->opcion_2);
         break;
     case 'D':
-        printf("\t[A] %s\n\t[B] %s\n\t[C] %s\n\t[D] %s\n", pregunta->opcion_1, 
+        fprintf(fileBuffer,"\t[A] %s\n\t[B] %s\n\t[C] %s\n\t[D] %s\n", pregunta->opcion_1, 
             pregunta->opcion_2, pregunta->opcion_3, pregunta->resp_correcta);
         break;
     }
@@ -148,7 +148,7 @@ int mostrarPreguntaConTiempo(tPregunta *pregunta,tJugador *jugador,  int tiempoL
         return FALLA_TEMPORIZADOR;
     }
 
-    mostrarPregunta(pregunta,rta);
+    mostrarPregunta(pregunta,rta, stdout);
 
     while (1) {
         if (_kbhit()) {

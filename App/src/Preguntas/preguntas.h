@@ -11,6 +11,6 @@
     void crearRespuestasCorrectas(char *vec, const int rounds);
     int  mostrarPreguntaConTiempo(tPregunta *pregunta, tJugador *jugador,  
                                      int tiempoLimite, int round, const char rta); 
-    
+    void mostrarPregunta(tPregunta *pregunta, const char respuestaCorrecta, FILE *fileBuffer);
 
 #endif
