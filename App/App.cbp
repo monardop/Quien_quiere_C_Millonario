@@ -43,6 +43,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/Jugadores/jugadores.h" />
+		<Unit filename="src/Preguntas/funcionesAPI.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="src/Preguntas/preguntas.c">
 			<Option compilerVar="CC" />
 		</Unit>

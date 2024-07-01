@@ -2,4 +2,4 @@
 *.depend
 /App/bin
 /App/obj
-App/App.layout
+*.layout

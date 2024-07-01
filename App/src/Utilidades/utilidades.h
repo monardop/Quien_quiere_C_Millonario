@@ -10,6 +10,7 @@
     #define FALLA_MEMORIA           -4
     #define FALLA_CURL              -3
     #define FALLA_ARCHIVO_RESULTADO -2
+    #define FALLA_TEMPORIZADOR      -1
     #define OK                       1
 
     typedef struct
@@ -19,6 +20,11 @@
         int  *tiempoDeRespuesta,
               puntajeFinal;
     }tJugador;
+
+    typedef struct{
+        char  *string;
+        size_t size;
+    }tRespuesta;
 
     typedef struct
     {

@@ -111,8 +111,6 @@ void algoritmoFisherYates(dsLista *lista, unsigned ce)
     }
 }
 
-void listFilter(dsLista *lista, cmp cmp);
-
 void listReduce(dsLista *lista, void* container, reduceFunc func)
 {
     tNodo* aux;
@@ -142,4 +140,73 @@ void listMap(dsLista *lista, lambda func)
         aux = aux->next;
     }while(aux != (*lista)->next);
 
+}
+
+/******************************************************************************
+* @Descripción:
+* Si cmp == 1 significa que el nodo se queda.
+******************************************************************************/
+int listFilter(dsLista *listaDestino, dsLista *listaOrigen, const void *parametro, cmp cmp)
+{
+    tNodo* aux;
+    
+    aux = (*listaOrigen)->next;
+    do
+    {
+        if(cmp(parametro, (const void *)aux->data) == 1)
+        {
+            if(agregarElemento(listaDestino, aux->data, aux->dataSize) != OK)
+                return FALLA_MEMORIA;
+        }
+        aux = aux->next;
+    }while(aux != (*listaOrigen)->next);
+
+    return OK;
+}
+
+int contarElementos(dsLista *lista)
+{
+    tNodo* aux;
+    int i = 0;
+    if(*lista == NULL)
+    {
+        return 0;
+    }
+    aux = (*lista)->next;
+    
+    do
+    {
+        i++;
+        aux = aux->next;
+    }while(aux != (*lista)->next);
+
+    return i;
+}
+
+void borrarElementoN(dsLista *lista, int elemento)
+{
+    tNodo *nodoBorrar;
+
+    lista = &(*lista)->next;
+
+    for(int i = 0; i < elemento; i++)
+    {
+        lista = &(*lista)->next;
+    }
+    nodoBorrar = *lista;
+    *lista = nodoBorrar->next;
+    free(nodoBorrar->data);
+    free(nodoBorrar);
+}
+
+void dejarNelementos(dsLista *lista, int cantidadFinal)
+{
+    int cantidadElementos = contarElementos(lista), 
+        elemRandom;
+
+    for(int i = cantidadElementos - cantidadFinal; i > 0; i--)
+    {
+        elemRandom = rand() % i; 
+        borrarElementoN(lista, elemRandom);
+    }
 }
