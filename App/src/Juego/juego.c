@@ -120,7 +120,6 @@ void configurarPartida(int *rounds, int *tiempo, dsLista *preguntas)
     }
 }
 
-
 int seccionPreguntas(dsLista *preguntas, dsLista *jugadores, const int rounds, const int nJugadores, const int tiempo)
 {
     char respuestasCorrectas[8];
@@ -132,19 +131,24 @@ int seccionPreguntas(dsLista *preguntas, dsLista *jugadores, const int rounds, c
 
     for(i = 0; i < nJugadores; i++)
     {
+        system("cls");
         jugadores = &(*jugadores)->next;
         jugadorActual = (tJugador *)(*jugadores)->data;
         printf("Turno de: %s\n", jugadorActual->nombre);
         system("pause");
         for(j = 0; j < rounds; j++)
         {
+            system("cls");
             preguntas = &(*preguntas)->next;
             preguntaActual = (tPregunta *)(*preguntas)->data;
-            if(mostrarPreguntaConTiempo(preguntaActual,jugadorActual,tiempo, rounds, respuestasCorrectas[j]) != OK)
+            if(mostrarPreguntaConTiempo(preguntaActual,jugadorActual,tiempo, j, respuestasCorrectas[j]) != OK)
                 return FALLA_TEMPORIZADOR;
-            system("pause");
+            
+            system("pause"); 
         }
     }
+    
+    system("pause");
     return OK;
 }
 
