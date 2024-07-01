@@ -1,4 +1,5 @@
 #include "juego.h"
+#define  BARRA  "-----------------------------------------------------------------------------------------------------------------------------------------------" 
 
 void sumarPuntaje(const tJugador *jugador, int *vecPuntajes, const int rounds)
 {
@@ -75,8 +76,7 @@ int declararGanadores(const int *vec, dsLista *jugadores, char *nombreArchivo, c
 
     if((archivoInforme = fopen(nombreArchivo, "at")) == NULL)
         return FALLA_ARCHIVO_RESULTADO;
-    fprintf(archivoInforme, "Ganadores de la partida:");
-    fprintf(archivoInforme, "\n");
+    fprintf(archivoInforme, "\n\nGanadores de la partida:\n");
 
     aux = (*jugadores)->next;
     do
@@ -84,9 +84,8 @@ int declararGanadores(const int *vec, dsLista *jugadores, char *nombreArchivo, c
         jugador = (tJugador *)aux->data;
         if(vec[i] == mayor)
         {
-            fprintf(archivoInforme, "%s con %d puntos.", jugador->nombre, mayor);
-            fprintf(archivoInforme, "\n");
-            fprintf(stdout, "\t%s con %d puntos.\n", jugador->nombre, mayor);
+            fprintf(archivoInforme, "%30s con %d puntos.\n", jugador->nombre, mayor);
+            fprintf(stdout, "\t%20s con %d puntos.\n", jugador->nombre, mayor);
         }
 
         aux = aux->next;
@@ -122,28 +121,30 @@ int generarInforme(char *nombreInforme, int *resultados, dsLista *jugadores, dsL
         i++;
     } while (aux != (*preguntas)->next);
     
-    
-    fprintf(archivoInforme, "        Jugador|");
+    fprintf(archivoInforme, "\n\n");
+    fprintf(archivoInforme, "%s\n", BARRA);
+    fprintf(archivoInforme, "%30s|", "Jugador");
     for (int j = 0; j < i; j++)
     {
-        fprintf(archivoInforme, " Pregunta %d: [%c]  |", j+1 , respuestas[j]);
+        fprintf(archivoInforme, "  Pregunta %d: [%c] |", j+1 , respuestas[j]);
     }
-    fprintf(archivoInforme, "Puntaje Final|\n");
-
+    fprintf(archivoInforme, "Puntaje Final   |\n");
+    fprintf(archivoInforme, "%s\n", BARRA);
     aux = (*jugadores)->next;
     do
     {
         jugador = (tJugador *)aux->data;
-        fprintf(archivoInforme, "%15s|", jugador->nombre);
+        fprintf(archivoInforme, "%30s|", jugador->nombre);
         for (int j = 0; j < i; j++)
         {
             fprintf(archivoInforme, " [%c][%+02ds][%+dptos] |", jugador->respuestas[j],
                     jugador->tiempoDeRespuesta[j], jugador->puntajeFinal[j]);
         }
-        fprintf(archivoInforme, "  [%+03dptos]|\n", *resultados);
+        fprintf(archivoInforme, "   [%+04dptos]   |\n", *resultados);
         resultados++;
         aux = aux->next;
     } while (aux != (*jugadores)->next);
+    fprintf(archivoInforme, "%s\n", BARRA);
 
     fclose(archivoInforme);
 
