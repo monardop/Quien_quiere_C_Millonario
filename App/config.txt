@@ -1,2 +1,2 @@
-Rounds: 5
-Tiempo: 10
+Rounds: 7
+Tiempo: 5

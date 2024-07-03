@@ -111,21 +111,6 @@ void algoritmoFisherYates(dsLista *lista, unsigned ce)
     }
 }
 
-void listReduce(dsLista *lista, void* container, reduceFunc func)
-{
-    tNodo* aux;
-    if(!(*lista))
-    {
-        return;
-    }
-    aux = (*lista)->next;
-    do
-    {
-        func(aux->data, container);
-        aux = aux->next;
-    }while(aux != (*lista)->next);
-} 
-
 void listMap(dsLista *lista, lambda func)
 {
     tNodo* aux;
