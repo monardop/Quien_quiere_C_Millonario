@@ -38,11 +38,11 @@ int obtenerPreguntascURL(tRespuesta *respuesta)
         return FALLA_CURL;
     }
 
-    curl_easy_setopt(curl, CURLOPT_URL, "https://665617e99f970b3b36c44808.mockapi.io/questions/api/questions");
+    curl_easy_setopt(curl, CURLOPT_URL, URL_API_PREGUNTAS);
 
     struct curl_slist *headers = NULL;
 
-    headers = curl_slist_append(headers, "X-Secret: 665617e99f970b3b36c44808");
+    headers = curl_slist_append(headers, PASS_API_PREGUNTAS);
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
     // guardo la información obtenida en el struct

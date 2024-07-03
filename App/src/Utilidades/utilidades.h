@@ -13,6 +13,9 @@
     #define FALLA_TEMPORIZADOR      -1
     #define OK                       1
 
+    #define URL_API_PREGUNTAS "https://665617e99f970b3b36c44808.mockapi.io/questions/api/questions"
+    #define PASS_API_PREGUNTAS "X-Secret: 665617e99f970b3b36c44808"
+
     typedef struct
     {
         char  nombre[50];
