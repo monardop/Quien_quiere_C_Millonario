@@ -19,8 +19,10 @@ char *copiarString(char *destino, char *origen)
 
 int parseoPreguntas(dsLista *preguntas, char *jsonPreguntas)
 {
-    char dificultad;
+    char dificultad[2];
     tPregunta aux;
+
+    dificultad[1] = '\0';
 
     while((jsonPreguntas = strchr(jsonPreguntas, '{')) != NULL)
     {
@@ -30,8 +32,8 @@ int parseoPreguntas(dsLista *preguntas, char *jsonPreguntas)
         jsonPreguntas = copiarString(aux.opcion_2, strchr(jsonPreguntas, ':') + 2);
         jsonPreguntas = copiarString(aux.opcion_3, strchr(jsonPreguntas, ':') + 2);
         jsonPreguntas = strchr(jsonPreguntas, ':') + 1;
-        dificultad = *jsonPreguntas;
-        aux.nivel = atoi(&dificultad);
+        dificultad[0] = *jsonPreguntas;
+        aux.nivel = atoi(dificultad);
         jsonPreguntas = copiarString(aux.id, strchr(jsonPreguntas, ':') + 2);
 
         if(agregarElemento(preguntas, (void*)&aux, sizeof(tPregunta)) != OK)
