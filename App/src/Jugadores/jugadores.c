@@ -85,7 +85,7 @@ int menorTiempo(const int *vec, const int cantElem)
     return menorTiempo;
 }
 
-int cargarVectorTiempos(dsLista *jugadores, int *vec, const int round)
+void cargarVectorTiempos(dsLista *jugadores, int *vec, const int round)
 {   
     int i = 0;
     tNodo *aux = (*jugadores)->next; 
@@ -103,7 +103,6 @@ int cargarVectorTiempos(dsLista *jugadores, int *vec, const int round)
         i++;
     }while(aux != (*jugadores)->next);
 
-    return i; // esto es la cantidad de jugadores.
 }
 
 void actualizarPuntaje(dsLista *jugadores, const int masRapido, const int cantidadCorrectas, const int *vec, const int round)
@@ -133,18 +132,19 @@ void actualizarPuntaje(dsLista *jugadores, const int masRapido, const int cantid
     }while(aux != (*jugadores)->next);
 }
 
-void modificarPuntaje(char respuestaCorrecta, dsLista *jugadores, const int round)
+void modificarPuntaje(char respuestaCorrecta, dsLista *jugadores, const int round, const int cantJugadores)
 {
-    int tiempos[7], // no puede haber más de 7 rounds
+    int *tiempos,
         masRapido, 
-        elementos,
         cantidadCorrecta = 0;
 
-    elementos = cargarVectorTiempos(jugadores, tiempos,  round);
+    tiempos = (int *)malloc(sizeof(int) * cantJugadores);
 
-    masRapido = menorTiempo(tiempos, elementos);
+    cargarVectorTiempos(jugadores, tiempos,  round);
+
+    masRapido = menorTiempo(tiempos, cantJugadores);
     
-    for (size_t j = 0; j < elementos; j++)
+    for (size_t j = 0; j < cantJugadores; j++)
     {
         if(tiempos[j] == masRapido){
             cantidadCorrecta++; // chequeo cuantos respondieron en ese tiempo
@@ -153,5 +153,5 @@ void modificarPuntaje(char respuestaCorrecta, dsLista *jugadores, const int roun
 
     if(cantidadCorrecta > 0)
         actualizarPuntaje(jugadores, masRapido, cantidadCorrecta, tiempos, round);
-    
+    free(tiempos);
 }

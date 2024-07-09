@@ -1,4 +1,5 @@
 #include "juego.h"
+#include <stdio.h>
 
 int menu(void)
 {
@@ -47,7 +48,7 @@ int cantidadJugadores(void)
 int seleccionDificultad(void)
 {
     int dificultad;
-    char aux;
+    char aux[2];
     short error = 0;
     do
     {
@@ -57,13 +58,13 @@ int seleccionDificultad(void)
         error = 0;
         printf("Seleccionar dificultad\n\t[1] Facil\n\t[2] Medio\n\t[3] Dificil\n");
         printf("Ingrese un valor: ");
-        aux = getc(stdin);
+        fgets(aux,2,stdin);
         fflush(stdin);
-        if(aux < '1' || aux > '3')
+        if(aux[0] < '1' || aux[0] > '3')
             error = 1;
     }while(error);
 
-    dificultad = atoi(&aux);
+    dificultad = atoi(aux);
 
     return dificultad;
 }
@@ -149,7 +150,7 @@ int seccionPreguntas(dsLista *preguntas, dsLista *jugadores, const int rounds, c
 
     for (i = 0; i < rounds; i++)
     {
-        modificarPuntaje(respuestasCorrectas[i], jugadores, i);
+        modificarPuntaje(respuestasCorrectas[i], jugadores, i, nJugadores);
     }
     
     system("pause");
