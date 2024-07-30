@@ -10,7 +10,7 @@ int getJugadores(dsLista *pl, const int cantJugadores, const int rounds)
         fgets(nuevo.nombre, 50, stdin);
         fflush(stdin);
         limpiarCadena(nuevo.nombre);
-        if(strlen(nuevo.nombre) == 0) // 
+        if(strlen(nuevo.nombre) == 0) //
         {
             printf("Error en el ingreso, intente otra vez.\n");
             i--;
@@ -21,13 +21,13 @@ int getJugadores(dsLista *pl, const int cantJugadores, const int rounds)
             nuevo.puntajeFinal = (int *)malloc(rounds * sizeof(int));
             if(nuevo.respuestas == NULL || nuevo.tiempoDeRespuesta == NULL || nuevo.puntajeFinal == NULL)
                 return FALLA_MEMORIA;
-            
+
             memset(nuevo.puntajeFinal, 0, rounds);
             memset(nuevo.tiempoDeRespuesta, 0, rounds);
             if(agregarElemento(pl, &nuevo, sizeof(tJugador)) != OK)
                 return FALLA_MEMORIA;
-        } 
-    }   
+        }
+    }
 
     algoritmoFisherYates(pl, cantJugadores);
 
@@ -37,13 +37,13 @@ int getJugadores(dsLista *pl, const int cantJugadores, const int rounds)
 /******************************************************************************
 * @Descripción:
 * Los jugadores tienen 2 vectores dinámicos, por lo que antes de vaciar la
-* lista de jugadores debo liberar la memoria de cada jugador. Una vez 
-* realizado, vacío la lista como cualquier otra. 
+* lista de jugadores debo liberar la memoria de cada jugador. Una vez
+* realizado, vacío la lista como cualquier otra.
 ******************************************************************************/
 void liberarJugador(void *jugador)
 {
     tJugador *actual = (tJugador *)jugador;
-    
+
     free(actual->respuestas);
     free(actual->tiempoDeRespuesta);
     free(actual->puntajeFinal);
@@ -68,36 +68,38 @@ void mostrarJugadores(dsLista *pl)
 
 /******************************************************************************
 * @Descripción:
-* Recorro la lista de jugadores cargando el tiempo que tardaron. Una vez 
-* cargados, busco el menor. Si hay un tiempo menor, lo guardo y asigno el 
+* Recorro la lista de jugadores cargando el tiempo que tardaron. Una vez
+* cargados, busco el menor. Si hay un tiempo menor, lo guardo y asigno el
 * extra de puntos a quien corresponda.
 ******************************************************************************/
 int menorTiempo(const int *vec, const int cantElem)
 {
-    int menorTiempo = 0;
+    int menorTiempo = 100000;
 
     for(int i = 0; i < cantElem; i++)
     {
         if(vec[i] > -1 && vec[i] < menorTiempo)
             menorTiempo = vec[i];
     }
-    
+
+    if(menorTiempo == 100000)
+        return -1;
     return menorTiempo;
 }
 
 void cargarVectorTiempos(dsLista *jugadores, int *vec, const int round)
-{   
+{
     int i = 0;
-    tNodo *aux = (*jugadores)->next; 
+    tNodo *aux = (*jugadores)->next;
     tJugador *jugador;
 
     do
     {
         jugador = (tJugador *)aux->data;
-        
+
         if(jugador->puntajeFinal[round] == 1)
             vec[i] = jugador->tiempoDeRespuesta[round];
-        else    
+        else
             vec[i] = -1;
         aux = aux->next;
         i++;
@@ -108,13 +110,13 @@ void cargarVectorTiempos(dsLista *jugadores, int *vec, const int round)
 void actualizarPuntaje(dsLista *jugadores, const int masRapido, const int cantidadCorrectas, const int *vec, const int round)
 {
     int i = 0;
-    tNodo *aux = (*jugadores)->next; 
+    tNodo *aux = (*jugadores)->next;
     tJugador *jugador;
 
     do
     {
         jugador = (tJugador *)aux->data;
-        
+
         if(vec[i] == masRapido)
         {
             if(cantidadCorrectas > 1)
@@ -126,7 +128,7 @@ void actualizarPuntaje(dsLista *jugadores, const int masRapido, const int cantid
                 jugador->puntajeFinal[round] += 2;
             }
         }
-            
+
         aux = aux->next;
         i++;
     }while(aux != (*jugadores)->next);
@@ -135,7 +137,7 @@ void actualizarPuntaje(dsLista *jugadores, const int masRapido, const int cantid
 void modificarPuntaje(char respuestaCorrecta, dsLista *jugadores, const int round, const int cantJugadores)
 {
     int *tiempos,
-        masRapido, 
+        masRapido,
         cantidadCorrecta = 0;
 
     tiempos = (int *)malloc(sizeof(int) * cantJugadores);
@@ -143,7 +145,12 @@ void modificarPuntaje(char respuestaCorrecta, dsLista *jugadores, const int roun
     cargarVectorTiempos(jugadores, tiempos,  round);
 
     masRapido = menorTiempo(tiempos, cantJugadores);
-    
+
+    if(masRapido == -1){
+        free(tiempos);
+        return;
+    }
+
     for (size_t j = 0; j < cantJugadores; j++)
     {
         if(tiempos[j] == masRapido){
